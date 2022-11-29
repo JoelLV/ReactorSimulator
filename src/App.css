@@ -1,0 +1,63 @@
+html, body {
+    font-family: 'Roboto Mono', sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+.reactors-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.reactor-preview-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 500px;
+    margin: auto;
+}
+
+.reactor-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.reactor-preview-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 10px;
+}
+
+.reactor-preview-image {
+    width: 230px;
+    height: 300px;
+}
+
+.indiv-emergency-shut-down-button {
+    background-color: #FF6663;
+    color: white;
+    font-family: 'Roboto Mono', sans-serif;
+    border-radius: 40px;
+    border-width: 0;
+    cursor: pointer;
+    width: 150px;
+    height: 50px;
+}
+
+.indiv-controlled-shut-down-button {
+    background-color: #E0FF4F;
+    color: #0B3954;
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+    border-width: 0;
+    border-radius: 40px;
+    font-family: 'Roboto Mono', sans-serif;
+}
