@@ -14,7 +14,7 @@ html, body {
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 400px;
     height: 500px;
     margin: auto;
 }
@@ -40,24 +40,14 @@ html, body {
     height: 300px;
 }
 
-.indiv-emergency-shut-down-button {
-    background-color: #FF6663;
-    color: white;
-    font-family: 'Roboto Mono', sans-serif;
-    border-radius: 40px;
-    border-width: 0;
-    cursor: pointer;
-    width: 150px;
-    height: 50px;
+.reactor-view-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-.indiv-controlled-shut-down-button {
-    background-color: #E0FF4F;
-    color: #0B3954;
-    width: 150px;
-    height: 50px;
-    cursor: pointer;
-    border-width: 0;
-    border-radius: 40px;
-    font-family: 'Roboto Mono', sans-serif;
+.reactor-view-btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
