@@ -51,3 +51,19 @@ html, body {
     flex-direction: column;
     gap: 10px;
 }
+.MuiToolbar-root {
+    background: lightgray;
+    font-family: 'Roboto Mono', sans-serif;
+    
+  }
+
+.MuiTypography-root.MuiTypography-h6 {
+    font-family: 'Roboto Mono', sans-serif;
+    color: #0B3954;
+}
+
+.MuiButtonBase-root.MuiButton-text {
+    font-family: 'Roboto Mono', sans-serif;
+    color: #0B3954;
+    
+}

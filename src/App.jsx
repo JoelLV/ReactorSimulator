@@ -1,5 +1,6 @@
 import Dashboard from "./components/Dashboard"
 import ReactorView from "./components/ReactorView"
+import Navbar from "./components/Navbar"
 import {
     createBrowserRouter,
     RouterProvider,
@@ -19,7 +20,12 @@ const router = createBrowserRouter([
 
 const App = () => {
     return (
-        <RouterProvider router={router} />
+        <div>
+            <Navbar/>
+            <RouterProvider router={router} />
+        </div>
+        
+        
     )
 }
 
