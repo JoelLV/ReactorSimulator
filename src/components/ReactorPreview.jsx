@@ -73,7 +73,7 @@ const ReactorPreview = ({ id, name }) => {
     }
 
     return (
-        <div className="reactor-preview-container">
+        <div className="reactor-preview-container" >
             <div className="reactor-preview-body">
                 <div className="reactor-preview-header">
                     <Avatar sx={{ bgcolor: "#FF6663"}}>

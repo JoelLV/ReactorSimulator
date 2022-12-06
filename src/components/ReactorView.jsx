@@ -236,7 +236,7 @@ const ReactorView = () => {
 
     return (
         <ThemeProvider theme={ReactorViewTheme}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center",paddingTop: "100px" }}>
                 <div className="reactor-view-container">
                     <div className="reactor-view-btn-container">
                         <Button variant="contained" sx={ButtonStyle} color="refuel" onClick={handleRefuelButtonClicked}>
