@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import Navbar from "./Navbar"
 import ReactorPreview from "./ReactorPreview"
 
 const Dashboard = () => {

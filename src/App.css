@@ -55,6 +55,7 @@ html, body {
     background: lightgray;
     font-family: 'Roboto Mono', sans-serif;
     
+    
   }
 
 .MuiTypography-root.MuiTypography-h6 {
@@ -65,5 +66,19 @@ html, body {
 .MuiButtonBase-root.MuiButton-text {
     font-family: 'Roboto Mono', sans-serif;
     color: #0B3954;
+    
+}
+
+#powerName {
+    padding-top: 70px;
+    padding-right: 20px;
+    text-align: right;
+    color: #0B3954;
+}
+.form {
+    display: flex;
+    justify-content: right;
+    padding-right: 20px;
+    
     
 }
