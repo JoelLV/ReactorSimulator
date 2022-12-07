@@ -10,6 +10,7 @@ import EvStationIcon from '@mui/icons-material/EvStation'
 import DangerousIcon from '@mui/icons-material/Dangerous'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import { useSnackbar } from "notistack"
+import LineGraph from "./LineGraph"
 
 const ReactorView = () => {
     const [reactorData, setReactorData] = useState({
@@ -24,6 +25,7 @@ const ReactorView = () => {
         outputUnit: "",
         fuelLevel: 0,
     })
+    const [tempData, setTempData] = useState([])
     const { id } = useParams()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
@@ -59,6 +61,11 @@ const ReactorView = () => {
 
         return () => clearInterval(interval)
     }, [])
+
+    //This updates the graph within 5 min from the reactor temp
+    useEffect(() => {
+        setTempData(prevTempData => [...prevTempData, reactorData.temperature].slice(-1500))
+    }, [reactorData.temperature])
 
     /**
      * Requests server to start this
@@ -237,6 +244,9 @@ const ReactorView = () => {
     return (
         <ThemeProvider theme={ReactorViewTheme}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center",paddingTop: "100px" }}>
+                <div className="graph">
+                    <LineGraph lineData={tempData} />
+                </div>
                 <div className="reactor-view-container">
                     <div className="reactor-view-btn-container">
                         <Button variant="contained" sx={ButtonStyle} color="refuel" onClick={handleRefuelButtonClicked}>
