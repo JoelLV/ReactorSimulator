@@ -14,6 +14,7 @@ const Dashboard = () => {
     const [avgTemps, setAvgTemps] = useState([])
     const [logs, setLogs] = useState([])
     const [genCoolantOn, setGenCoolantOn] = useState(false)
+    const [currMilliSec, setCurrMilliSec] = useState(0)
 
     const genActionsBtnStyles = {
         ...ButtonStyle,
@@ -55,6 +56,7 @@ const Dashboard = () => {
             jsonData.reactors.map(reactor => reactor.temperature)
                 .reduce((accumulator, value) => accumulator + value, 0) / jsonData.reactors.length
         ].slice(-1500))
+        setCurrMilliSec(prevTime => prevTime + 200)
         setLogs(stringLogs)
         setPlantName(jsonData.plant_name)
         setReactors(jsonData.reactors)
@@ -147,7 +149,7 @@ const Dashboard = () => {
                 <NameForm />
             </div>
             <div style={{ width: "50%" }}>
-                <LineGraph lineData={avgTemps} />
+                <LineGraph lineData={avgTemps} currMilliSec={currMilliSec} />
             </div>
             <div style={{ display: "flex", gap: "100px", justifyContent: "center" }}>
                 <ThemeProvider theme={ReactorViewTheme}>

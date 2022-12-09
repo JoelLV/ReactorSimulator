@@ -1,8 +1,9 @@
 import { Chart } from "chart.js/auto"
 import { useEffect, useRef } from "react"
 
-const LineGraph = ({ lineData }) => {
+const LineGraph = ({ lineData, currMilliSec }) => {
     const canvasRef = useRef(null)
+    const milliSecBoundary = 300000
 
     useEffect(() => {
         const ctx = canvasRef.current
@@ -10,7 +11,13 @@ const LineGraph = ({ lineData }) => {
         const myChart = new Chart(ctx, {
             type: "line",
             data: {
-                labels: lineData.map((datum, index) => index),
+                labels: lineData.map((datum, index) => {
+                    if (currMilliSec >= milliSecBoundary) {
+                        return (currMilliSec - (milliSecBoundary - (200 * index))) / 1000
+                    } else {
+                        return (index * 200) / 1000
+                    }
+                }),
                 datasets: [{
                     data: lineData,
                     borderWidth: 2,
@@ -34,7 +41,7 @@ const LineGraph = ({ lineData }) => {
         return () => {
             myChart.destroy()
         }
-    }, [lineData])
+    }, [lineData, currMilliSec])
 
     return (
         <div style={{width: "600px", height: "600px"}}>
