@@ -49,19 +49,19 @@ const Dashboard = () => {
             })
         })
 
-        // grab last 300 to only get 5 minutes worth of data
+        // grab last 1500 to only get 5 minutes worth of data
         setAvgTemps(prevAvgTemps => [
             ...prevAvgTemps,
             jsonData.reactors.map(reactor => reactor.temperature)
                 .reduce((accumulator, value) => accumulator + value, 0) / jsonData.reactors.length
-        ].slice(-300))
+        ].slice(-1500))
         setLogs(stringLogs)
         setPlantName(jsonData.plant_name)
         setReactors(jsonData.reactors)
     }
 
     useEffect(() => {
-        const intervalId = setInterval(fetchAndGrabData, 1000)
+        const intervalId = setInterval(fetchAndGrabData, 200)
 
         return () => {
             clearInterval(intervalId)
