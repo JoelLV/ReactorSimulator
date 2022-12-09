@@ -145,10 +145,9 @@ const Dashboard = () => {
         <div>
             <Navbar logs={logs} />
             <div>
-                <h1 id="powerName">Enter Power Plant Name</h1>
                 <NameForm />
             </div>
-            <div style={{ width: "50%" }}>
+            <div className="graph" style={{ width: "50%" }}>
                 <LineGraph lineData={avgTemps} currMilliSec={currMilliSec} />
             </div>
             <div style={{ display: "flex", gap: "100px", justifyContent: "center" }}>

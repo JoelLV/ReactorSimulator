@@ -19,6 +19,7 @@ const LineGraph = ({ lineData, currMilliSec }) => {
                     }
                 }),
                 datasets: [{
+                    label: 'Average Temp',
                     data: lineData,
                     borderWidth: 2,
                     fill: true,
@@ -30,9 +31,17 @@ const LineGraph = ({ lineData, currMilliSec }) => {
                 scales: {
                     y: {
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Temperature in °C'
+                        }
                     },
                     x: {
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Time in Seconds'
+                        }
                     }
                 }
             }

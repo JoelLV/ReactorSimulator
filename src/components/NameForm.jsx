@@ -22,31 +22,34 @@ function NameForm() {
     };
 
     return (
-        <div className='form'>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                <EditIcon />
-            </Button>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Name</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Please enter a name for your Power Plant.
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Plant Name"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Name</Button>
-                </DialogActions>
-            </Dialog>
+        <div>
+            <h1 id="powerName">Enter Power Plant Name</h1>
+            <div className='form'>
+                <Button variant="outlined" onClick={handleClickOpen}>
+                    <EditIcon />
+                </Button>
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Name</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please enter a name for your Power Plant.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Plant Name"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleClose}>Name</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         </div>
     );
 }
