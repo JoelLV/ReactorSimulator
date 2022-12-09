@@ -30,6 +30,26 @@ const ReactorView = () => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     /**
+     * Returns true if reactor state is
+     * on maintenance mode or offline.
+     * 
+     * @return bool
+     */
+    const isOffline = () => {
+        return reactorData.reactorState === "Offline" || reactorData.reactorState === "Maintenance"
+    }
+
+    /**
+     * Returns true if current
+     * reactor is in emergency shutdown.
+     * 
+     * @returns bool
+     */
+    const inEmergencyShutdown = () => {
+        return reactorData.reactorState === "Emergency Shutdown"
+    }
+
+    /**
      * Returns a string that represents the
      * color that needs to be displayed depending
      * on the state of the reactor.
@@ -78,14 +98,8 @@ const ReactorView = () => {
                     method: "POST"
                 })
             } else if (reactorData.reactorState === "Offline" ||
-                reactorData.reactorState === "Maintenance" ||
-                reactorData.reactorState === "Emergency Shutdown"
+                reactorData.reactorState === "Maintenance"
             ) {
-                if (reactorData.reactorState === "Emergency Shutdown") {
-                    await fetch(`https://nuclear.dacoder.io/reactors/maintenance/${id}?apiKey=6cc0a3fa7141b32d`, {
-                        method: "POST"
-                    })
-                }
                 await fetch(`https://nuclear.dacoder.io/reactors/start-reactor/${id}?apiKey=6cc0a3fa7141b32d`, {
                     method: "POST"
                 })
@@ -232,36 +246,58 @@ const ReactorView = () => {
      * @param action string action needed to execute appropriate api call
      */
     const handleRodChangeButtonClicked = (action) => {
-        if (reactorData.reactorState !== "Active") {
-            enqueueSnackbar(`Cannot ${action === "raise-rod" ? "raise" : "drop"} rods in ${reactorData.reactorState} state`, {
-                preventDuplicate: true,
-            })
-        } else {
-            changeRods(action === "raise-rod" ? reactorData.controlRodIn : reactorData.controlRodOut, action)
-        }
+        changeRods(action === "raise-rod" ? reactorData.controlRodIn : reactorData.controlRodOut, action)
     }
 
     return (
         <ThemeProvider theme={ReactorViewTheme}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center",paddingTop: "100px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "100px" }}>
                 <div className="graph">
                     <LineGraph lineData={tempData} />
                 </div>
                 <div className="reactor-view-container">
                     <div className="reactor-view-btn-container">
-                        <Button variant="contained" sx={ButtonStyle} color="refuel" onClick={handleRefuelButtonClicked}>
+                        <Button 
+                            variant="contained"
+                            sx={ButtonStyle}
+                            color="refuel"
+                            onClick={handleRefuelButtonClicked}
+                            disabled={inEmergencyShutdown()}
+                        >
                             Refuel Reactor <EvStationIcon />
                         </Button>
-                        <Button variant="contained" sx={ButtonStyle} color="emergency" onClick={handleEmergencyButtonClicked}>
+                        <Button 
+                            variant="contained"
+                            sx={ButtonStyle}
+                            color="emergency"
+                            onClick={handleEmergencyButtonClicked}
+                            disabled={inEmergencyShutdown()}
+                        >
                             Emergency Shutdown <DangerousIcon />
                         </Button>
-                        <Button variant="contained" sx={ButtonStyle} color="coolant" onClick={handleCoolantButtonClicked}>
+                        <Button 
+                            variant="contained"
+                            sx={ButtonStyle}
+                            color="coolant"
+                            onClick={handleCoolantButtonClicked}
+                            disabled={isOffline() || inEmergencyShutdown()}
+                        >
                             Turn {reactorData.coolantState === "on" ? "off" : "on"} Coolant <AcUnitIcon />
                         </Button>
-                        <Button variant="contained" sx={ButtonStyle} onClick={() => handleRodChangeButtonClicked("raise-rod")}>
+                        <Button
+                            variant="contained"
+                            sx={ButtonStyle}
+                            onClick={() => handleRodChangeButtonClicked("raise-rod")}
+                            disabled={isOffline() || inEmergencyShutdown()}
+                        >
                             Raise Rods <AlignVerticalTopIcon />
                         </Button>
-                        <Button variant="contained" sx={ButtonStyle} onClick={() => handleRodChangeButtonClicked("drop-rod")}>
+                        <Button 
+                            variant="contained"
+                            sx={ButtonStyle}
+                            onClick={() => handleRodChangeButtonClicked("drop-rod")}
+                            disabled={isOffline() || inEmergencyShutdown()}
+                        >
                             Drop Rods <AlignVerticalTopIcon />
                         </Button>
                     </div>
@@ -279,6 +315,7 @@ const ReactorView = () => {
                                     variant="contained"
                                     color={getPowerButtonColor()}
                                     onClick={handlePowerButtonClicked}
+                                    disabled={inEmergencyShutdown()}
                                 >
                                     <PowerSettingsNewIcon />
                                 </Button>

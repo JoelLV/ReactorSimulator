@@ -7,44 +7,12 @@ import ElectricBoltIcon from '@mui/icons-material/ElectricBolt'
 import EvStationIcon from '@mui/icons-material/EvStation'
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import getReactorData from "../helpers/RequestHelper"
 import ButtonStyle from "../styles/ButtonStyle"
 import ReactorViewTheme from "../styles/ReactorViewTheme"
 
-const ReactorPreview = ({ id, name }) => {
-    const [reactorData, setReactorData] = useState({
-        temperatureStatus: "",
-        temperature: 0.0,
-        temperatureUnit: "",
-        reactorState: "",
-        controlRodIn: 0,
-        controlRodOut: 0,
-        coolantState: "",
-        output: 0,
-        outputUnit: "",
-        fuelLevel: 0,
-    })
+const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, controlRodIn, controlRodOut, coolantState, output, outputUnit, fuelLevel }) => {
     const navigate = useNavigate()
-
-    /**
-     * Starts requesting constantly
-     * to the server for information
-     * regarding this reactor and
-     * updates state data accordingly.
-     */
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            try {
-                const data = await getReactorData(id)
-                setReactorData(data)
-            } catch (error) {
-            }
-        }, 200)
-
-        return () => clearInterval(interval)
-    }, [])
 
     /**
      * Notifies server to perform an
@@ -83,7 +51,7 @@ const ReactorPreview = ({ id, name }) => {
                 </div>
                 <img className="reactor-preview-image" src="reactor.png" alt="Reactor image" />
                 <ThemeProvider theme={ReactorViewTheme}>
-                    <Button 
+                    <Button
                         onClick={handleEmergencyShutDown}
                         sx={ButtonStyle}
                         variant="contained"
@@ -108,27 +76,27 @@ const ReactorPreview = ({ id, name }) => {
             >
                 <SpeedDialAction
                     icon={<EvStationIcon />}
-                    tooltipTitle={`Fuel percentage: ${reactorData.fuelLevel.toFixed(2)}%`}
+                    tooltipTitle={`Fuel percentage: ${fuelLevel.toFixed(2)}%`}
                     tooltipPlacement="right"
                 />
                 <SpeedDialAction
                     icon={<ElectricBoltIcon />}
-                    tooltipTitle={`Output: ${reactorData.output} ${reactorData.outputUnit}`}
+                    tooltipTitle={`Output: ${output} ${outputUnit}`}
                     tooltipPlacement="right"
                 />
                 <SpeedDialAction
                     icon={<AcUnitIcon />}
-                    tooltipTitle={`Coolant state: ${reactorData.coolantState}`}
+                    tooltipTitle={`Coolant state: ${coolantState}`}
                     tooltipPlacement="right"
                 />
                 <SpeedDialAction
                     icon={<AlignVerticalTopIcon />}
-                    tooltipTitle={`Rods in: ${reactorData.controlRodIn} | Rods out: ${reactorData.controlRodOut}`}
+                    tooltipTitle={`Rods in: ${controlRodIn} | Rods out: ${controlRodOut}`}
                     tooltipPlacement="right"
                 />
                 <SpeedDialAction
                     icon={<ThermostatIcon />}
-                    tooltipTitle={`Temperature: ${reactorData.temperature.toFixed(2)} ${reactorData.temperatureUnit}`}
+                    tooltipTitle={`Temperature: ${temp.toFixed(2)} ${tempUnit}`}
                     tooltipPlacement="right"
                 />
             </SpeedDial>
@@ -138,11 +106,11 @@ const ReactorPreview = ({ id, name }) => {
                 sx={{
                     position: "absolute", 
                     borderRadius: 50, 
-                    left: 320, 
-                    top: 430, 
-                    maxWidth: 56, 
-                    minWidth: 56, 
-                    maxHeight: 56, 
+                    left: 320,
+                    top: 430,
+                    maxWidth: 56,
+                    minWidth: 56,
+                    maxHeight: 56,
                     minHeight: 56,
                 }}
                 onClick={() => navigate(`/${id}`)}

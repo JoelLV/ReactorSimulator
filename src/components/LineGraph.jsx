@@ -1,8 +1,7 @@
 import { Chart } from "chart.js/auto"
 import { useEffect, useRef } from "react"
 
-const LineGraph = (props) => {
-    const { lineData } = props
+const LineGraph = ({ lineData }) => {
     const canvasRef = useRef(null)
 
     useEffect(() => {
@@ -36,9 +35,11 @@ const LineGraph = (props) => {
             myChart.destroy()
         }
     }, [lineData])
-    
+
     return (
-        <canvas ref={canvasRef}></canvas>
+        <div style={{width: "600px", height: "600px"}}>
+            <canvas ref={canvasRef}></canvas>
+        </div>
     )
 }
 
