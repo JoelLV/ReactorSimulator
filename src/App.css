@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     font-family: 'Roboto Mono', sans-serif;
     padding: 0;
     margin: 0;
@@ -51,12 +52,11 @@ html, body {
     flex-direction: column;
     gap: 10px;
 }
+
 .MuiToolbar-root {
-    background: lightgray;
+    background-color: lightgray;
     font-family: 'Roboto Mono', sans-serif;
-    
-    
-  }
+}
 
 .MuiTypography-root.MuiTypography-h6 {
     font-family: 'Roboto Mono', sans-serif;
@@ -66,7 +66,6 @@ html, body {
 .MuiButtonBase-root.MuiButton-text {
     font-family: 'Roboto Mono', sans-serif;
     color: #0B3954;
-    
 }
 
 #powerName {
@@ -75,10 +74,9 @@ html, body {
     text-align: right;
     color: #0B3954;
 }
+
 .form {
     display: flex;
     justify-content: right;
     padding-right: 20px;
-    
-    
 }
