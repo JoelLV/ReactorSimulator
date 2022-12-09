@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, ThemeProvider, Tooltip, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import getReactorData from "../helpers/RequestHelper"
 import ButtonStyle from "../styles/ButtonStyle"
 import ReactorViewTheme from "../styles/ReactorViewTheme"
@@ -11,8 +11,10 @@ import DangerousIcon from '@mui/icons-material/Dangerous'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import { useSnackbar } from "notistack"
 import LineGraph from "./LineGraph"
+import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 
 const ReactorView = () => {
+    const navigate = useNavigate()
     const [reactorData, setReactorData] = useState({
         temperatureStatus: "",
         temperature: 0.0,
@@ -251,9 +253,26 @@ const ReactorView = () => {
 
     return (
         <ThemeProvider theme={ReactorViewTheme}>
+            <Button
+                color="primary" 
+                variant="contained"
+                sx={{
+                    position: "absolute", 
+                    borderRadius: 50, 
+                    left: 120,
+                    top: 20,
+                    maxWidth: 32,
+                    minWidth: 32,
+                    maxHeight: 32,
+                    minHeight: 32,
+                }}
+                onClick={() => navigate(`/`)}
+            >
+                <ArrowCircleLeftOutlinedIcon />
+            </Button>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "100px" }}>
                 <div className="graph">
-                    <LineGraph lineData={tempData} />
+                    <LineGraph lineData={tempData}/>
                 </div>
                 <div className="reactor-view-container">
                     <div className="reactor-view-btn-container">
