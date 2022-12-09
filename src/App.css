@@ -80,3 +80,16 @@ body {
     justify-content: right;
     padding-right: 20px;
 }
+.graph {
+    background: lightgray;
+    display: flex;
+    justify-content: center;
+    height: 320px;
+    border-radius: 10px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 80px;
+}
