@@ -147,8 +147,10 @@ const Dashboard = () => {
             <div>
                 <NameForm />
             </div>
-            <div className="graph" style={{ width: "50%" }}>
-                <LineGraph lineData={avgTemps} currMilliSec={currMilliSec} />
+            <div className="center">
+                <div className="graph" style={{ width: "50%" }}>
+                    <LineGraph lineData={avgTemps} currMilliSec={currMilliSec} />
+                </div>
             </div>
             <div style={{ display: "flex", gap: "100px", justifyContent: "center" }}>
                 <ThemeProvider theme={ReactorViewTheme}>
