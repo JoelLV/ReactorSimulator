@@ -28,6 +28,7 @@ const ReactorView = () => {
     const [tempData, setTempData] = useState([])
     const { id } = useParams()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+    const [currMilliSec, setCurrMilliSec] = useState(0)
 
     /**
      * Returns true if reactor state is
@@ -75,17 +76,14 @@ const ReactorView = () => {
             try {
                 const data = await getReactorData(id)
                 setReactorData(data)
+                setCurrMilliSec(prevMilliSec => prevMilliSec + 200)
+                setTempData(prevTempData => [...prevTempData, data.temperature].slice(-1500))
             } catch (error) {
             }
         }, 200)
 
         return () => clearInterval(interval)
     }, [])
-
-    //This updates the graph within 5 min from the reactor temp
-    useEffect(() => {
-        setTempData(prevTempData => [...prevTempData, reactorData.temperature].slice(-1500))
-    }, [reactorData.temperature])
 
     /**
      * Requests server to start this
@@ -253,7 +251,7 @@ const ReactorView = () => {
         <ThemeProvider theme={ReactorViewTheme}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "100px" }}>
                 <div className="graph">
-                    <LineGraph lineData={tempData} />
+                    <LineGraph lineData={tempData} currMilliSec={currMilliSec} />
                 </div>
                 <div className="reactor-view-container">
                     <div className="reactor-view-btn-container">

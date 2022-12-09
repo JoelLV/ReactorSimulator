@@ -13,9 +13,12 @@ const LineGraph = ({ lineData, currMilliSec }) => {
             data: {
                 labels: lineData.map((datum, index) => {
                     if (currMilliSec >= milliSecBoundary) {
-                        return (currMilliSec - (milliSecBoundary - (200 * index))) / 1000
+                        // This formula is in charge of rolling the milliseconds
+                        // being displayed whenever we reach the millisecond boundary
+                        // which is 300,000 or 5 minutes.
+                        return ((currMilliSec - (milliSecBoundary - (200 * index))) / 1000).toFixed(2)
                     } else {
-                        return (index * 200) / 1000
+                        return ((index * 200) / 1000).toFixed(2)
                     }
                 }),
                 datasets: [{
