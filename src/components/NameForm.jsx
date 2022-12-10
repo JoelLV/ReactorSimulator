@@ -7,9 +7,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditIcon from '@mui/icons-material/Edit';
+import { useState } from 'react';
 
-function NameForm() {
-    const [open, setOpen] = React.useState(false);
+
+function NameForm({plantName}) {
+    const [open, setOpen] = React.useState(false)
+    const [name, setName] = useState("")
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -17,13 +20,36 @@ function NameForm() {
 
     const handleClose = () => {
         setOpen(false);
-
-
     };
+
+    const changeName = async () => {
+        
+        try {
+            await fetch(`https://nuclear.dacoder.io/reactors/plant-name?apiKey=6cc0a3fa7141b32d`, {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name
+                })
+            })
+            handleClose()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
+    const handleNameChange = ({target}) => {
+        const {value} = target
+        setName(value)
+        console.log(value)
+    }
 
     return (
         <div>
-            <h1 id="powerName">Enter Power Plant Name</h1>
+            <h1 id="powerName">{plantName}</h1>
             <div className='form'>
                 <Button variant="outlined" onClick={handleClickOpen}>
                     <EditIcon />
@@ -42,11 +68,12 @@ function NameForm() {
                             type="text"
                             fullWidth
                             variant="standard"
+                            onChange={handleNameChange}
                         />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={handleClose}>Name</Button>
+                        <Button onClick={changeName}>Submit</Button>
                     </DialogActions>
                 </Dialog>
             </div>

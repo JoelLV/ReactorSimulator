@@ -145,7 +145,7 @@ const Dashboard = () => {
         <div>
             <Navbar logs={logs} />
             <div>
-                <NameForm />
+                <NameForm plantName={plantName}/>
             </div>
             <div className="center">
                 <div className="graph" style={{ width: "50%" }}>

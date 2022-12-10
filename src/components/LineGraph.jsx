@@ -10,6 +10,7 @@ const LineGraph = ({ lineData, currMilliSec }) => {
 
         const myChart = new Chart(ctx, {
             type: "line",
+            label: "Data",
             data: {
                 labels: lineData.map((datum, index) => {
                     if (currMilliSec >= milliSecBoundary) {
