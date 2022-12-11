@@ -16,6 +16,9 @@ const NameForm = ({ plantName }) => {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
+    /**
+     * Open and close the form
+     */
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -24,6 +27,9 @@ const NameForm = ({ plantName }) => {
         setOpen(false);
     };
 
+    /**
+     * Fetching the name of the plant from the server
+     */
     const changeName = async () => {
         try {
             setIsSubmitting(true)
@@ -51,6 +57,9 @@ const NameForm = ({ plantName }) => {
         }
     }
     
+    /**
+     * This grabs the changes made in the text box and sets the name of it to the value
+     */
     const handleNameChange = ({ target }) => {
         const {value} = target
         setName(value)
