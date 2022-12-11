@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -10,8 +9,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useState } from 'react';
 
 
-function ReactorForm({plantName}) {
-    const [open, setOpen] = React.useState(false)
+function ReactorForm({ reactorName, id }) {
+    const [open, setOpen] = useState(false)
     const [name, setName] = useState("")
 
     const handleClickOpen = () => {
@@ -23,7 +22,8 @@ function ReactorForm({plantName}) {
     };
 
     const changeName = async () => {
-        
+        console.log("fetching")
+
         try {
             await fetch(`https://nuclear.dacoder.io/reactors/set-reactor-name/${id}?apiKey=6cc0a3fa7141b32d`, {
                 method: "PUT",
@@ -35,20 +35,22 @@ function ReactorForm({plantName}) {
                     name
                 })
             })
+            console.log("succeed")
             handleClose()
         } catch (error) {
+            console.log(error)
         }
     }
-    
-    const handleNameChange = ({target}) => {
-        const {value} = target
+
+    const handleNameChange = ({ target }) => {
+        const { value } = target
         setName(value)
         console.log(value)
     }
 
     return (
         <div>
-            <h1 id="reactorName">{plantName}</h1>
+            <h1 id="reactorName">{reactorName}</h1>
             <div className='form'>
                 <Button variant="outlined" onClick={handleClickOpen}>
                     <EditIcon />

@@ -60,6 +60,16 @@ const ReactorView = () => {
     }
 
     /**
+     * fetches the name of this reactor using id
+     */
+    const getName = async () => {
+        const rawData = await fetch(`https://nuclear.dacoder.io/reactors?apiKey=6cc0a3fa7141b32d`)
+        const jsonData = await rawData.json()
+        const {reactors} = jsonData
+
+        setReactorName(reactors.find(reactor => reactor.id === id))
+    }
+    /**
      * Starts requesting constantly
      * to the server for information
      * regarding this reactor and
@@ -72,6 +82,7 @@ const ReactorView = () => {
                 setReactorData(data)
                 setCurrMilliSec(prevMilliSec => prevMilliSec + 200)
                 setTempData(prevTempData => [...prevTempData, data.temperature].slice(-1500))
+                getName()
                 setIsLoading(false)
             } catch (error) {
             }
@@ -318,7 +329,7 @@ const ReactorView = () => {
                             <Typography variant="h3">
                                 {name}
                             </Typography>
-                            <ReactorForm />
+                            <ReactorForm reactor={reactorName} id={id}/>
                         </>
                     )
                 }
