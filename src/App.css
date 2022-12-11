@@ -45,6 +45,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
+    margin: 40px;
 }
 
 .reactor-view-btn-container {
@@ -89,6 +90,10 @@ body {
     text-align: center;
 }
 
+.reactor-info-container {
+    font-size: 1.0em;
+}
+
 .graph {
     background: lightgray;
     display: flex;
@@ -116,5 +121,16 @@ body {
 @media (max-width: 850px) {
     .graph {
         width: 90vw;
+    }
+    .reactor-view-container {
+        flex-direction: column;
+    }
+    .reactor-view-btn-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .reactor-info-container {
+        font-size: 0.7em;
     }
 }

@@ -29,7 +29,7 @@ const ReactorView = () => {
         fuelLevel: 0,
     })
     const [tempData, setTempData] = useState([])
-    const { id } = useParams()
+    const { id, name } = useParams()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const [currMilliSec, setCurrMilliSec] = useState(0)
 
@@ -266,25 +266,30 @@ const ReactorView = () => {
 
     return (
         <ThemeProvider theme={ReactorViewTheme}>
-            <NameForm />
+            <div style={{display: "flex", justifyContent: "end", alignItems: "center"}}>
+                <Typography variant="h3">
+                    {name}
+                </Typography>
+                <NameForm />
+            </div>
             <Button
                 color="primary" 
                 variant="contained"
                 sx={{
                     position: "absolute", 
                     borderRadius: 50, 
-                    left: 120,
+                    left: 15,
                     top: 20,
-                    maxWidth: 32,
-                    minWidth: 32,
-                    maxHeight: 32,
-                    minHeight: 32,
+                    maxWidth: 35,
+                    minWidth: 35,
+                    maxHeight: 35,
+                    minHeight: 35,
                 }}
                 onClick={() => navigate(`/`)}
             >
                 <ArrowCircleLeftOutlinedIcon />
             </Button>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "100px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "100px", flexDirection: "column",  }}>
                 <div className="graph">
                     <LineGraph lineData={tempData} currMilliSec={currMilliSec} />
                 </div>
@@ -335,7 +340,7 @@ const ReactorView = () => {
                         </Button>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                        <img className="reactor-preview-image" src="reactor.png" />
+                        <img className="reactor-preview-image" src="../reactor.png" />
                         <div style={{ display: "flex", gap: "10px" }}>
                             <p>Reactor State: {reactorData.reactorState}</p>
                             <Tooltip title={reactorData.reactorState === "Active" ? "Perform controlled shutdown" : "Activate reactor"}>
@@ -356,7 +361,7 @@ const ReactorView = () => {
                         </div>
                     </div>
                     <Card elevation={3}>
-                        <CardContent>
+                        <CardContent className="reactor-info-container">
                             <Typography variant="h4">
                                 Reactor Information
                             </Typography>
