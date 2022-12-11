@@ -1,7 +1,7 @@
 import { Chart } from "chart.js/auto"
 import { useEffect, useRef } from "react"
 
-const LineGraph = ({ lineData, currMilliSec }) => {
+const LineGraph = ({ lineData, currMilliSec, tempUnit }) => {
     const canvasRef = useRef(null)
     const milliSecBoundary = 300000
 
@@ -37,7 +37,7 @@ const LineGraph = ({ lineData, currMilliSec }) => {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Temperature in °C',
+                            text: `Temperature in ${tempUnit === "celsius" ? "°C" : "°F"}`,
                             font: {
                                 family: "Roboto Mono"
                             }
