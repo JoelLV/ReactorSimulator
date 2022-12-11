@@ -12,7 +12,7 @@ const router = createBrowserRouter([
         element: <Dashboard />
     },
     {
-        path: '/:id/:name',
+        path: '/:id',
         element: <ReactorView />
     }
 ])

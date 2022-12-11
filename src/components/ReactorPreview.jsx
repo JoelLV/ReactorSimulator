@@ -308,7 +308,7 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
                             maxHeight: 56,
                             minHeight: 56,
                         }}
-                        onClick={() => navigate(`/${id}/${name}`)}
+                        onClick={() => navigate(`/${id}`)}
                     >
                         <SettingsIcon />
                     </Button>

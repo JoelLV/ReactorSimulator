@@ -31,7 +31,7 @@ const ReactorView = () => {
         fuelLevel: 0,
     })
     const [tempData, setTempData] = useState([])
-    const { id, name } = useParams()
+    const { id } = useParams()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const [currMilliSec, setCurrMilliSec] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
@@ -60,14 +60,14 @@ const ReactorView = () => {
     }
 
     /**
-     * fetches the name of this reactor using id
+     * Fetches the name of this reactor using id
      */
     const getName = async () => {
         const rawData = await fetch(`https://nuclear.dacoder.io/reactors?apiKey=6cc0a3fa7141b32d`)
         const jsonData = await rawData.json()
-        const {reactors} = jsonData
+        const { reactors } = jsonData
 
-        setReactorName(reactors.find(reactor => reactor.id === id))
+        setReactorName(reactors.find(reactor => reactor.id == id).name)
     }
     /**
      * Starts requesting constantly
@@ -325,12 +325,7 @@ const ReactorView = () => {
             <div style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
                 {
                     isLoading ? (<Skeleton variant="rectangular" height="100px" width="30vw" />) : (
-                        <>
-                            <Typography variant="h3">
-                                {name}
-                            </Typography>
-                            <ReactorForm reactor={reactorName} id={id}/>
-                        </>
+                        <ReactorForm reactorName={reactorName} id={id}/>
                     )
                 }
             </div>
@@ -412,7 +407,7 @@ const ReactorView = () => {
                         }
                     </div>
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                        <img className="reactor-preview-image" src="../reactor.png" />
+                        <img className="reactor-preview-image" src="reactor.png" />
                         <div style={{ display: "flex", gap: "10px" }}>
                             {
                                 isLoading ? (<Skeleton variant="rectangular" width="240px" />) : (

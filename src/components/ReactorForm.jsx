@@ -23,7 +23,6 @@ function ReactorForm({ reactorName, id }) {
 
     const changeName = async () => {
         console.log("fetching")
-
         try {
             await fetch(`https://nuclear.dacoder.io/reactors/set-reactor-name/${id}?apiKey=6cc0a3fa7141b32d`, {
                 method: "PUT",
@@ -59,7 +58,7 @@ function ReactorForm({ reactorName, id }) {
                     <DialogTitle>Name</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Please enter a name for your Power Plant.
+                            Please enter a name for your Reactor.
                         </DialogContentText>
                         <TextField
                             autoFocus
