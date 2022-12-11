@@ -7,12 +7,14 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import EditIcon from '@mui/icons-material/Edit'
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom'
+import { useSnackbar } from "notistack"
 import { useState } from 'react'
 
 const NameForm = ({ plantName }) => {
     const [open, setOpen] = useState(false)
     const [name, setName] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -25,7 +27,7 @@ const NameForm = ({ plantName }) => {
     const changeName = async () => {
         try {
             setIsSubmitting(true)
-            await fetch(`https://nuclear.dacoder.io/reactors/plant-name?apiKey=6cc0a3fa7141b32d`, {
+            const response = await fetch(`https://nuclear.dacoder.io/reactors/plant-name?apiKey=6cc0a3fa7141b32d`, {
                 method: "PUT",
                 headers: {
                     'Accept': 'application/json',
@@ -35,9 +37,17 @@ const NameForm = ({ plantName }) => {
                     name
                 })
             })
+
+            if (!response.ok) {
+                const errorMessage = await response.json()
+                enqueueSnackbar(errorMessage.message, {
+                    preventDuplicate: true
+                })
+            }
+        } catch (error) {
+        } finally {
             setIsSubmitting(false)
             handleClose()
-        } catch (error) {
         }
     }
     

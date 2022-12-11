@@ -294,23 +294,25 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
                         }}
                     />
                 </SpeedDial>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    sx={{
-                        position: "absolute",
-                        borderRadius: 50,
-                        left: 320,
-                        top: 430,
-                        maxWidth: 56,
-                        minWidth: 56,
-                        maxHeight: 56,
-                        minHeight: 56,
-                    }}
-                    onClick={() => navigate(`/${id}/${name}`)}
-                >
-                    <SettingsIcon />
-                </Button>
+                <Tooltip title="Settings">
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        sx={{
+                            position: "absolute",
+                            borderRadius: 50,
+                            left: 320,
+                            top: 430,
+                            maxWidth: 56,
+                            minWidth: 56,
+                            maxHeight: 56,
+                            minHeight: 56,
+                        }}
+                        onClick={() => navigate(`/${id}/${name}`)}
+                    >
+                        <SettingsIcon />
+                    </Button>
+                </Tooltip>
             </ThemeProvider>
         </div>
     )
