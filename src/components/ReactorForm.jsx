@@ -21,6 +21,9 @@ function ReactorForm({ reactorName, id }) {
         setOpen(false);
     };
 
+    /**
+     * Fetches from the reactor the id to the name
+     */
     const changeName = async () => {
         console.log("fetching")
         try {
@@ -41,10 +44,12 @@ function ReactorForm({ reactorName, id }) {
         }
     }
 
+    /**
+     * This grabs the changes made in the text box and sets the name of it to the value
+     */
     const handleNameChange = ({ target }) => {
         const { value } = target
         setName(value)
-        console.log(value)
     }
 
     return (
