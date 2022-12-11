@@ -13,10 +13,11 @@ import HourglassBottomIcon from '@mui/icons-material/HourglassBottom'
 import { useSnackbar } from "notistack"
 import LineGraph from "./LineGraph"
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
-import NameForm from "./NameForm"
+import ReactorForm from "./ReactorForm"
 
 const ReactorView = () => {
     const navigate = useNavigate()
+    const [reactorName, setReactorName] = useState("")
     const [reactorData, setReactorData] = useState({
         temperatureStatus: "",
         temperature: 0.0,
@@ -308,23 +309,6 @@ const ReactorView = () => {
         }
     }
 
-    const changeName = async ({ target }) => {
-        const { value } = target
-        try {
-            await fetch(`https://nuclear.dacoder.io/reactors/set-reactor-name/${id}?apiKey=6cc0a3fa7141b32d`, {
-                method: "PUT",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name
-                })
-            })
-        } catch (error) {
-        }
-    }
-
     return (
         <ThemeProvider theme={ReactorViewTheme}>
             <div style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
@@ -334,7 +318,7 @@ const ReactorView = () => {
                             <Typography variant="h3">
                                 {name}
                             </Typography>
-                            <NameForm />
+                            <ReactorForm />
                         </>
                     )
                 }
