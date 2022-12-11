@@ -354,7 +354,7 @@ const ReactorView = () => {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "100px", flexDirection: "column", }}>
                 {isLoading ? (<Skeleton variant="rectangular" height="70vh" width="50%" />) : (
                     <div className="graph">
-                        <LineGraph lineData={tempData} currMilliSec={currMilliSec} />
+                        <LineGraph lineData={tempData} currMilliSec={currMilliSec} tempUnit={reactorData.temperatureUnit} />
                     </div>
                 )}
                 <div className="reactor-view-container">

@@ -230,7 +230,7 @@ const Dashboard = () => {
                 {
                     isLoading ? (<Skeleton height="500px" width="700px" />) : (
                         <div className="graph">
-                            <LineGraph lineData={avgTemps} currMilliSec={currMilliSec} />
+                            <LineGraph lineData={avgTemps} currMilliSec={currMilliSec} tempUnit={reactors.length > 0 ? reactors[0].temperatureUnit : "celsius"} />
                         </div>
                     )
                 }
@@ -240,7 +240,7 @@ const Dashboard = () => {
                     Total Output: {totalOutput} GW
                 </Typography>
                 <Typography>
-                    Average Temperature: {currAverageTemp} Celsius
+                    Average Temperature: {currAverageTemp} {reactors.length > 0 ? reactors[0].temperatureUnit : "celsius"}
                 </Typography>
             </div>
             <div className="gen-reactor-button-container">
