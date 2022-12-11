@@ -9,13 +9,19 @@ import TroubleshootIcon from '@mui/icons-material/Troubleshoot'
 import SettingsIcon from '@mui/icons-material/Settings'
 import WifiIcon from '@mui/icons-material/Wifi'
 import BuildIcon from '@mui/icons-material/Build'
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom'
 import DangerousIcon from '@mui/icons-material/Dangerous'
 import { useNavigate } from "react-router-dom"
 import ButtonStyle from "../styles/ButtonStyle"
 import ReactorViewTheme from "../styles/ReactorViewTheme"
+import { useState } from "react"
 
 const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, controlRodIn, controlRodOut, coolantState, output, outputUnit, fuelLevel }) => {
     const navigate = useNavigate()
+    const [loadingButtons, setLoadingButtons] = useState({
+        emergencyButton: false,
+        controlledButton: false,
+    })
 
     /**
      * Notifies server to perform an
@@ -23,9 +29,17 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
      */
     const handleEmergencyShutDown = async () => {
         try {
+            setLoadingButtons(prevValues => ({
+                ...prevValues,
+                emergencyButton: true
+            }))
             await fetch(`https://nuclear.dacoder.io/reactors/emergency-shutdown/${id}?apiKey=6cc0a3fa7141b32d`, {
                 method: 'POST'
             })
+            setLoadingButtons(prevValues => ({
+                ...prevValues,
+                emergencyButton: false
+            }))
         } catch (error) {
         }
     }
@@ -36,9 +50,17 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
      */
     const handleControlledShutDown = async () => {
         try {
+            setLoadingButtons(prevValues => ({
+                ...prevValues,
+                controlledButton: true
+            }))
             await fetch(`https://nuclear.dacoder.io/reactors/controlled-shutdown/${id}?apiKey=6cc0a3fa7141b32d`, {
                 method: 'POST'
             })
+            setLoadingButtons(prevValues => ({
+                ...prevValues,
+                controlledButton: false
+            }))
         } catch (error) {
         }
     }
@@ -142,15 +164,15 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
      * @returns string Color as string
      */
     const getGenSpeedDialColor = () => {
-        if (fuelLevel > 0 && fuelLevel < 50 ||
-            tempStatus === "Caution"
-        ) {
-            return "refuel.main"
-        } else if (fuelLevel <= 0 ||
+        if (fuelLevel <= 0 ||
             tempStatus === "Danger" ||
             tempStatus === "Meltdown"
         ) {
             return "emergency.main"
+        } else if (fuelLevel > 0 && fuelLevel < 50 ||
+            tempStatus === "Caution"
+        ) {
+            return "refuel.main"
         } else {
             return "reactorOn.main"
         }
@@ -174,8 +196,9 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
                         sx={ButtonStyle}
                         variant="contained"
                         color="emergency"
+                        disabled={loadingButtons.emergencyButton}
                     >
-                        Emergency Shutdown
+                        {loadingButtons.emergencyButton ? <HourglassBottomIcon /> : "Emergency Shutdown"}
                     </Button>
                     <Button
                         onClick={handleControlledShutDown}
@@ -183,7 +206,7 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
                         variant="contained"
                         color="controlled"
                     >
-                        Controlled Shutdown
+                        {loadingButtons.controlledButton ? <HourglassBottomIcon /> : "Controlled Shutdown"}
                     </Button>
                 </div>
                 <SpeedDial

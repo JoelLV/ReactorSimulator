@@ -12,7 +12,7 @@ const LineGraph = ({ lineData, currMilliSec }) => {
             type: "line",
             label: "Data",
             data: {
-                labels: lineData.map((datum, index) => {
+                labels: lineData.map((_, index) => {
                     if (currMilliSec >= milliSecBoundary) {
                         // This formula is in charge of rolling the milliseconds
                         // being displayed whenever we reach the millisecond boundary
@@ -37,15 +37,48 @@ const LineGraph = ({ lineData, currMilliSec }) => {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Temperature in °C'
+                            text: 'Temperature in °C',
+                            font: {
+                                family: "Roboto Mono"
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                family: "Roboto Mono"
+                            }
                         }
                     },
                     x: {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Time in Seconds'
+                            text: 'Time in Seconds',
+                            font: {
+                                family: "Roboto Mono"
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                family: "Roboto Mono"
+                            }
                         }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                family: "Roboto Mono"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                },
+                elements: {
+                    point: {
+                        radius: 0
                     }
                 }
             }
@@ -57,9 +90,7 @@ const LineGraph = ({ lineData, currMilliSec }) => {
     }, [lineData, currMilliSec])
 
     return (
-        <div style={{width: "600px", height: "600px"}}>
-            <canvas ref={canvasRef}></canvas>
-        </div>
+        <canvas ref={canvasRef}></canvas>
     )
 }
 

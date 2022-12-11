@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 
-const Navbar = ({ logs }) => {
+const Navbar = ({ logs, reSetter, intervalRestarter }) => {
     const [mobileOpen, setMobileOpen] = useState(false)
 
     /**
@@ -11,9 +11,11 @@ const Navbar = ({ logs }) => {
      * passed as a prop.
      */
     const resetReactors = async () => {
+        reSetter()
         await fetch(`https://nuclear.dacoder.io/reactors/reset?apiKey=6cc0a3fa7141b32d`, {
             method: "POST"
         })
+        intervalRestarter()
     }
 
     return (

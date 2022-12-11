@@ -4,9 +4,11 @@ import LineGraph from "./LineGraph"
 import Navbar from "./Navbar"
 import ReactorPreview from "./ReactorPreview"
 import NameForm from "./NameForm"
-import { Button, ThemeProvider } from "@mui/material"
+import { Button, Skeleton, ThemeProvider } from "@mui/material"
 import ButtonStyle from "../styles/ButtonStyle"
 import ReactorViewTheme from "../styles/ReactorViewTheme"
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom'
+import { useRef } from "react"
 
 const Dashboard = () => {
     const [plantName, setPlantName] = useState("")
@@ -15,6 +17,13 @@ const Dashboard = () => {
     const [logs, setLogs] = useState([])
     const [genCoolantOn, setGenCoolantOn] = useState(false)
     const [currMilliSec, setCurrMilliSec] = useState(0)
+    const [isLoading, setIsLoading] = useState(true)
+    const intervalRef = useRef(null)
+    const [loadingButtons, setLoadingButtons] = useState({
+        genControlledShutdown: false,
+        genEmergencyShutdown: false,
+        genCoolant: false,
+    })
 
     const genActionsBtnStyles = {
         ...ButtonStyle,
@@ -24,6 +33,7 @@ const Dashboard = () => {
         maxHeight: "100px",
         fontSize: "20px"
     }
+
     /**
      * Fetch basic data of existing reactors
      * and plant name on mount and assign appropriate
@@ -60,13 +70,14 @@ const Dashboard = () => {
         setLogs(stringLogs)
         setPlantName(jsonData.plant_name)
         setReactors(jsonData.reactors)
+        setIsLoading(false)
     }
 
     useEffect(() => {
-        const intervalId = setInterval(fetchAndGrabData, 200)
+        intervalRef.current = setInterval(fetchAndGrabData, 200)
 
         return () => {
-            clearInterval(intervalId)
+            clearInterval(intervalRef.current)
         }
     }, [])
 
@@ -76,6 +87,10 @@ const Dashboard = () => {
      * present.
      */
     const handleAllControlledShutdown = async () => {
+        setLoadingButtons(prevValues => ({
+            ...prevValues,
+            genControlledShutdown: true
+        }))
         await Promise.all(reactors.map(async reactor => {
             try {
                 if (reactor.reactorState !== "Emergency Shutdown") {
@@ -84,8 +99,11 @@ const Dashboard = () => {
                     })
                 }
             } catch (error) {
-                console.log(error)
             }
+        }))
+        setLoadingButtons(prevValues => ({
+            ...prevValues,
+            genControlledShutdown: false
         }))
     }
 
@@ -94,6 +112,10 @@ const Dashboard = () => {
      * for all reactors currently present.
      */
     const handleAllEmergencyShutdown = async () => {
+        setLoadingButtons(prevValues => ({
+            ...prevValues,
+            genEmergencyShutdown: true
+        }))
         await Promise.all(reactors.map(async reactor => {
             try {
                 if (reactor.reactorState !== "Emergency Shutdown") {
@@ -102,8 +124,11 @@ const Dashboard = () => {
                     })
                 }
             } catch (error) {
-                console.log(error)
             }
+        }))
+        setLoadingButtons(prevValues => ({
+            ...prevValues,
+            genEmergencyShutdown: false
         }))
     }
 
@@ -113,6 +138,10 @@ const Dashboard = () => {
      * currently present.
      */
     const handleAllToggleCoolant = async () => {
+        setLoadingButtons(prevValues => ({
+            ...prevValues,
+            genCoolant: true
+        }))
         await Promise.all(reactors.map(async reactor => {
             try {
                 if (reactor.reactorState !== "Emergency Shutdown" &&
@@ -135,70 +164,138 @@ const Dashboard = () => {
                     }
                 }
             } catch (error) {
-                console.log(error)
             }
         }))
         setGenCoolantOn(prevVal => !prevVal)
+        setLoadingButtons(prevValues => ({
+            ...prevValues,
+            genCoolant: false
+        }))
+    }
+
+    /**
+     * Sets all state variables that are
+     * related to reactor data to their
+     * default values.
+     */
+    const resetData = async () => {
+        clearInterval(intervalRef.current)
+        setIsLoading(true)
+        setPlantName("")
+        setReactors([])
+        setAvgTemps([])
+        setLogs([])
+        setGenCoolantOn(false)
+        setCurrMilliSec(0)
+    }
+
+    /**
+     * Restarts interval to start reading new data after
+     * global reset.
+     */
+    const restartInterval = async () => {
+        intervalRef.current = setInterval(fetchAndGrabData, 200)
     }
 
     return (
         <div>
-            <Navbar logs={logs} />
-            <div>
-                <NameForm plantName={plantName}/>
+            {
+                isLoading ? (<Skeleton variant="rectangular" height="10vh" />) : (
+                    <Navbar logs={logs} reSetter={resetData} intervalRestarter={restartInterval} />
+                )
+            }
+            {
+                isLoading ? (
+                    <div style={{ display: "flex", justifyContent: "end", padding: "10px" }}>
+                        <Skeleton variant="rectangular" height="10vh" width="50vh" />
+                    </div>
+                ) : (
+                    <NameForm plantName={plantName} />
+                )
+            }
+            <div className="graph-container">
+                {
+                    isLoading ? (<Skeleton height="500px" width="700px" />) : (
+                        <div className="graph">
+                            <LineGraph lineData={avgTemps} currMilliSec={currMilliSec} />
+                        </div>
+                    )
+                }
             </div>
-            <div className="center">
-                <div className="graph" style={{ width: "50%" }}>
-                    <LineGraph lineData={avgTemps} currMilliSec={currMilliSec} />
-                </div>
-            </div>
-            <div style={{ display: "flex", gap: "100px", justifyContent: "center" }}>
+            <div className="gen-reactor-button-container">
                 <ThemeProvider theme={ReactorViewTheme}>
-                    <Button
-                        sx={genActionsBtnStyles}
-                        color="controlled"
-                        variant="contained"
-                        onClick={handleAllControlledShutdown}
-                    >
-                        Controlled Shutdown for all Reactors
-                    </Button>
-                    <Button
-                        sx={genActionsBtnStyles}
-                        color="emergency"
-                        variant="contained"
-                        onClick={handleAllEmergencyShutdown}
-                    >
-                        Emergency Shutdown for all Reactors
-                    </Button>
-                    <Button
-                        sx={genActionsBtnStyles}
-                        color="coolant"
-                        variant="contained"
-                        onClick={handleAllToggleCoolant}
-                    >
-                        Turn {genCoolantOn ? "off" : "on"} all reactors' coolants
-                    </Button>
+                    {
+                        isLoading ? (
+                            <>
+                                {
+                                    [...Array(3)].map((_, index) => {
+                                        return <Skeleton key={index} variant="rectangular" height="100px" width="300px" />
+                                    })
+                                }
+                            </>
+                        ) : (
+                            <>
+                                <Button
+                                    sx={genActionsBtnStyles}
+                                    color="controlled"
+                                    variant="contained"
+                                    onClick={handleAllControlledShutdown}
+                                    disabled={loadingButtons.genControlledShutdown}
+                                >
+                                    {loadingButtons.genControlledShutdown ? (<HourglassBottomIcon />) : "Controlled Shutdown for all Reactors"}
+                                </Button>
+                                <Button
+                                    sx={genActionsBtnStyles}
+                                    color="emergency"
+                                    variant="contained"
+                                    onClick={handleAllEmergencyShutdown}
+                                    disabled={loadingButtons.genEmergencyShutdown}
+                                >
+                                    {loadingButtons.genEmergencyShutdown ? (<HourglassBottomIcon />) : "Emergency Shutdown for all Reactors"}
+                                </Button>
+                                <Button
+                                    sx={genActionsBtnStyles}
+                                    color="coolant"
+                                    variant="contained"
+                                    onClick={handleAllToggleCoolant}
+                                    disabled={loadingButtons.genCoolant}
+                                >
+                                    {loadingButtons.genCoolant ? (<HourglassBottomIcon />) : `Turn ${genCoolantOn ? "off" : "on"} all reactors' coolants`}
+                                </Button>
+                            </>
+                        )
+                    }
                 </ThemeProvider>
             </div>
             <div className="reactors-container">
                 {
-                    reactors.map(reactor => {
-                        return <ReactorPreview
-                            key={reactor.id}
-                            id={reactor.id}
-                            name={reactor.name}
-                            tempStatus={reactor.temperatureStatus}
-                            temp={reactor.temperature}
-                            tempUnit={reactor.temperatureUnit}
-                            reactorState={reactor.reactorState}
-                            controlRodIn={reactor.controlRodIn}
-                            controlRodOut={reactor.controlRodOut}
-                            coolantState={reactor.coolantState}
-                            output={reactor.output}
-                            outputUnit={reactor.outputUnit}
-                            fuelLevel={reactor.fuelLevel}
-                        />
-                    })
+                    isLoading ? (
+                        <div style={{ display: "flex", justifyContent: "center", gap: "200px", margin: "20px", width: "100%" }}>
+                            {
+                                [...Array(3)].map((_, index) => {
+                                    return <Skeleton key={index} variant="rectangular" height="350px" width="250px" />
+                                })
+                            }
+                        </div>
+                    ) : (
+                        reactors.map(reactor => {
+                            return <ReactorPreview
+                                key={reactor.id}
+                                id={reactor.id}
+                                name={reactor.name}
+                                tempStatus={reactor.temperatureStatus}
+                                temp={reactor.temperature}
+                                tempUnit={reactor.temperatureUnit}
+                                reactorState={reactor.reactorState}
+                                controlRodIn={reactor.controlRodIn}
+                                controlRodOut={reactor.controlRodOut}
+                                coolantState={reactor.coolantState}
+                                output={reactor.output}
+                                outputUnit={reactor.outputUnit}
+                                fuelLevel={reactor.fuelLevel}
+                            />
+                        })
+                    )
                 }
             </div>
         </div>

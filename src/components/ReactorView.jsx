@@ -106,7 +106,6 @@ const ReactorView = () => {
                 })
             }
         } catch (error) {
-            console.log(error)
         }
     }
 
@@ -129,7 +128,6 @@ const ReactorView = () => {
                 })
             })
         } catch (error) {
-            console.log(error)
         }
     }
 
@@ -149,7 +147,6 @@ const ReactorView = () => {
                 method: "POST"
             })
         } catch (error) {
-            console.log(error)
         }
     }
 
