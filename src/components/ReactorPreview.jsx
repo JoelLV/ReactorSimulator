@@ -14,10 +14,12 @@ import DangerousIcon from '@mui/icons-material/Dangerous'
 import { useNavigate } from "react-router-dom"
 import ButtonStyle from "../styles/ButtonStyle"
 import ReactorViewTheme from "../styles/ReactorViewTheme"
+import { useSnackbar } from "notistack"
 import { useState } from "react"
 
 const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, controlRodIn, controlRodOut, coolantState, output, outputUnit, fuelLevel }) => {
     const navigate = useNavigate()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const [loadingButtons, setLoadingButtons] = useState({
         emergencyButton: false,
         controlledButton: false,
@@ -28,19 +30,27 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
      * emergency shut down on this reactor.
      */
     const handleEmergencyShutDown = async () => {
+        setLoadingButtons(prevValues => ({
+            ...prevValues,
+            emergencyButton: true
+        }))
         try {
-            setLoadingButtons(prevValues => ({
-                ...prevValues,
-                emergencyButton: true
-            }))
-            await fetch(`https://nuclear.dacoder.io/reactors/emergency-shutdown/${id}?apiKey=6cc0a3fa7141b32d`, {
+            const response = await fetch(`https://nuclear.dacoder.io/reactors/emergency-shutdown/${id}?apiKey=6cc0a3fa7141b32d`, {
                 method: 'POST'
             })
+
+            if (!response.ok) {
+                const errorMessage = await response.json()
+                enqueueSnackbar(errorMessage.message, {
+                    preventDuplicate: true
+                })
+            }
+        } catch (error) {
+        } finally {
             setLoadingButtons(prevValues => ({
                 ...prevValues,
                 emergencyButton: false
             }))
-        } catch (error) {
         }
     }
 
@@ -49,19 +59,27 @@ const ReactorPreview = ({ id, name, tempStatus, temp, tempUnit, reactorState, co
      * controlled shut down on this reactor.
      */
     const handleControlledShutDown = async () => {
+        setLoadingButtons(prevValues => ({
+            ...prevValues,
+            controlledButton: true
+        }))
         try {
-            setLoadingButtons(prevValues => ({
-                ...prevValues,
-                controlledButton: true
-            }))
-            await fetch(`https://nuclear.dacoder.io/reactors/controlled-shutdown/${id}?apiKey=6cc0a3fa7141b32d`, {
+            const response = await fetch(`https://nuclear.dacoder.io/reactors/controlled-shutdown/${id}?apiKey=6cc0a3fa7141b32d`, {
                 method: 'POST'
             })
+
+            if (!response.ok) {
+                const errorMessage = await response.json()
+                enqueueSnackbar(errorMessage.message, {
+                    preventDuplicate: true
+                })
+            }
+        } catch (error) {
+        } finally {
             setLoadingButtons(prevValues => ({
                 ...prevValues,
                 controlledButton: false
             }))
-        } catch (error) {
         }
     }
 
