@@ -12,10 +12,11 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import { useSnackbar } from "notistack"
 import LineGraph from "./LineGraph"
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
-import NameForm from "./NameForm"
+import ReactorForm from "./ReactorForm"
 
 const ReactorView = () => {
     const navigate = useNavigate()
+    const [reactorName, setReactorName] = useState("")
     const [reactorData, setReactorData] = useState({
         temperatureStatus: "",
         temperature: 0.0,
@@ -250,26 +251,11 @@ const ReactorView = () => {
         changeRods(action === "raise-rod" ? reactorData.controlRodIn : reactorData.controlRodOut, action)
     }
 
-    const changeName = async ({target}) => {
-        const {value} = target
-        try {
-            await fetch(`https://nuclear.dacoder.io/reactors/set-reactor-name/${id}?apiKey=6cc0a3fa7141b32d`, {
-                method: "PUT",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name
-                })
-            })
-        } catch (error) {
-        }
-    }
+    
 
     return (
         <ThemeProvider theme={ReactorViewTheme}>
-            <NameForm />
+            <ReactorForm reactorName={reactorName}/>
             <Button
                 color="primary" 
                 variant="contained"
