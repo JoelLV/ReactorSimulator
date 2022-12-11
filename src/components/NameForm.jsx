@@ -1,18 +1,20 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import EditIcon from '@mui/icons-material/Edit';
-import { useState } from 'react';
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import EditIcon from '@mui/icons-material/Edit'
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom'
+import { useSnackbar } from "notistack"
+import { useState } from 'react'
 
-
-function NameForm({plantName}) {
-    const [open, setOpen] = React.useState(false)
+const NameForm = ({ plantName }) => {
+    const [open, setOpen] = useState(false)
     const [name, setName] = useState("")
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -23,9 +25,9 @@ function NameForm({plantName}) {
     };
 
     const changeName = async () => {
-        
         try {
-            await fetch(`https://nuclear.dacoder.io/reactors/plant-name?apiKey=6cc0a3fa7141b32d`, {
+            setIsSubmitting(true)
+            const response = await fetch(`https://nuclear.dacoder.io/reactors/plant-name?apiKey=6cc0a3fa7141b32d`, {
                 method: "PUT",
                 headers: {
                     'Accept': 'application/json',
@@ -35,16 +37,23 @@ function NameForm({plantName}) {
                     name
                 })
             })
-            handleClose()
+
+            if (!response.ok) {
+                const errorMessage = await response.json()
+                enqueueSnackbar(errorMessage.message, {
+                    preventDuplicate: true
+                })
+            }
         } catch (error) {
-            console.log(error)
+        } finally {
+            setIsSubmitting(false)
+            handleClose()
         }
     }
     
-    const handleNameChange = ({target}) => {
+    const handleNameChange = ({ target }) => {
         const {value} = target
         setName(value)
-        console.log(value)
     }
 
     return (
@@ -54,7 +63,7 @@ function NameForm({plantName}) {
                 <Button variant="outlined" onClick={handleClickOpen}>
                     <EditIcon />
                 </Button>
-                <Dialog open={open} onClose={handleClose}>
+                <Dialog open={open} onClose={handleClose} disableScrollLock={true}>
                     <DialogTitle>Name</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -73,12 +82,12 @@ function NameForm({plantName}) {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={changeName}>Submit</Button>
+                        <Button onClick={changeName}>{isSubmitting ? <HourglassBottomIcon /> : "Submit"}</Button>
                     </DialogActions>
                 </Dialog>
             </div>
         </div>
-    );
+    )
 }
 
 export default NameForm

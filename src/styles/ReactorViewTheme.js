@@ -2,6 +2,21 @@ import { createTheme } from "@mui/material"
 
 const ReactorViewTheme = createTheme({
     typography: {
+        h3: {
+            fontSize: "2.4em"
+        },
+        h4: {
+            fontSize: "1.0em",
+            '@media (max-width: 850px)': {
+                fontSize: "1.0em"
+            }
+        },
+        h6: {
+            fontSize: "1.0em",
+            '@media (max-width: 850px)': {
+                fontSize: "1.0em"
+            }
+        },
         fontFamily: "Roboto Mono",
     },
     palette: {

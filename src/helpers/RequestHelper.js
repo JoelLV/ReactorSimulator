@@ -84,19 +84,34 @@ const updateFuelLevelData = async (id) => {
 }
 
 const getReactorData = async (id) => {
-    const fuelLevel = await updateFuelLevelData(id)
-    const output = await updateOutputData(id)
-    const coolantData = await updateCoolantData(id)
-    const rodData = await updateRodData(id)
-    const reactorName = await updateReactorName(id)
-    const temperature = await updateTemperature(id)
-    return {
-        ...fuelLevel,
-        ...output,
-        ...coolantData,
-        ...rodData,
-        ...reactorName,
-        ...temperature
+    try {
+        const fuelLevel = await updateFuelLevelData(id)
+        const output = await updateOutputData(id)
+        const coolantData = await updateCoolantData(id)
+        const rodData = await updateRodData(id)
+        const reactorName = await updateReactorName(id)
+        const temperature = await updateTemperature(id)
+        return {
+            ...fuelLevel,
+            ...output,
+            ...coolantData,
+            ...rodData,
+            ...reactorName,
+            ...temperature
+        }
+    } catch (error) {
+        return {
+            temperatureStatus: "",
+            temperature: 0,
+            temperatureUnit: "",
+            reactorState: "",
+            controlRodIn: 0,
+            controlRodOut: 0,
+            coolantState: "",
+            output: 0,
+            outputUnit: "",
+            fuelLevel: 0
+        }
     }
 }
 
