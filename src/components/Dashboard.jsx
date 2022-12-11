@@ -4,7 +4,7 @@ import LineGraph from "./LineGraph"
 import Navbar from "./Navbar"
 import ReactorPreview from "./ReactorPreview"
 import NameForm from "./NameForm"
-import { Button, Skeleton, ThemeProvider } from "@mui/material"
+import { Button, Skeleton, ThemeProvider, Typography } from "@mui/material"
 import ButtonStyle from "../styles/ButtonStyle"
 import ReactorViewTheme from "../styles/ReactorViewTheme"
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom'
@@ -19,6 +19,8 @@ const Dashboard = () => {
     const [currMilliSec, setCurrMilliSec] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
     const intervalRef = useRef(null)
+    const [totalOutput, setTotalOutput] = useState(0)
+    const [currAverageTemp, setCurrAverageTemp] = useState(0)
     const [loadingButtons, setLoadingButtons] = useState({
         genControlledShutdown: false,
         genEmergencyShutdown: false,
@@ -60,16 +62,26 @@ const Dashboard = () => {
             })
         })
 
+        const currAvgTemp = (jsonData.reactors.map(reactor => reactor.temperature)
+            .reduce((accumulator, value) => accumulator + value, 0) / jsonData.reactors.length).toFixed(2)
+
         // grab last 1500 to only get 5 minutes worth of data
         setAvgTemps(prevAvgTemps => [
             ...prevAvgTemps,
-            jsonData.reactors.map(reactor => reactor.temperature)
-                .reduce((accumulator, value) => accumulator + value, 0) / jsonData.reactors.length
+            currAvgTemp
         ].slice(-1500))
         setCurrMilliSec(prevTime => prevTime + 200)
         setLogs(stringLogs)
         setPlantName(jsonData.plant_name)
         setReactors(jsonData.reactors)
+        setTotalOutput(
+            (
+                jsonData.reactors.reduce((accumulator, currValue) => {
+                    return accumulator + currValue.output
+                }, 0) / 1000
+            ).toFixed(2)
+        )
+        setCurrAverageTemp(currAvgTemp)
         setIsLoading(false)
     }
 
@@ -187,6 +199,7 @@ const Dashboard = () => {
         setLogs([])
         setGenCoolantOn(false)
         setCurrMilliSec(0)
+        setTotalOutput(0)
     }
 
     /**
@@ -198,7 +211,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div>
+        <ThemeProvider theme={ReactorViewTheme}>
             {
                 isLoading ? (<Skeleton variant="rectangular" height="10vh" />) : (
                     <Navbar logs={logs} reSetter={resetData} intervalRestarter={restartInterval} />
@@ -222,50 +235,56 @@ const Dashboard = () => {
                     )
                 }
             </div>
+            <div className="average-info-container">
+                <Typography>
+                    Total Output: {totalOutput} GW
+                </Typography>
+                <Typography>
+                    Average Temperature: {currAverageTemp} Celsius
+                </Typography>
+            </div>
             <div className="gen-reactor-button-container">
-                <ThemeProvider theme={ReactorViewTheme}>
-                    {
-                        isLoading ? (
-                            <>
-                                {
-                                    [...Array(3)].map((_, index) => {
-                                        return <Skeleton key={index} variant="rectangular" height="100px" width="300px" />
-                                    })
-                                }
-                            </>
-                        ) : (
-                            <>
-                                <Button
-                                    sx={genActionsBtnStyles}
-                                    color="controlled"
-                                    variant="contained"
-                                    onClick={handleAllControlledShutdown}
-                                    disabled={loadingButtons.genControlledShutdown}
-                                >
-                                    {loadingButtons.genControlledShutdown ? (<HourglassBottomIcon />) : "Controlled Shutdown for all Reactors"}
-                                </Button>
-                                <Button
-                                    sx={genActionsBtnStyles}
-                                    color="emergency"
-                                    variant="contained"
-                                    onClick={handleAllEmergencyShutdown}
-                                    disabled={loadingButtons.genEmergencyShutdown}
-                                >
-                                    {loadingButtons.genEmergencyShutdown ? (<HourglassBottomIcon />) : "Emergency Shutdown for all Reactors"}
-                                </Button>
-                                <Button
-                                    sx={genActionsBtnStyles}
-                                    color="coolant"
-                                    variant="contained"
-                                    onClick={handleAllToggleCoolant}
-                                    disabled={loadingButtons.genCoolant}
-                                >
-                                    {loadingButtons.genCoolant ? (<HourglassBottomIcon />) : `Turn ${genCoolantOn ? "off" : "on"} all reactors' coolants`}
-                                </Button>
-                            </>
-                        )
-                    }
-                </ThemeProvider>
+                {
+                    isLoading ? (
+                        <>
+                            {
+                                [...Array(3)].map((_, index) => {
+                                    return <Skeleton key={index} variant="rectangular" height="100px" width="300px" />
+                                })
+                            }
+                        </>
+                    ) : (
+                        <>
+                            <Button
+                                sx={genActionsBtnStyles}
+                                color="controlled"
+                                variant="contained"
+                                onClick={handleAllControlledShutdown}
+                                disabled={loadingButtons.genControlledShutdown}
+                            >
+                                {loadingButtons.genControlledShutdown ? (<HourglassBottomIcon />) : "Controlled Shutdown for all Reactors"}
+                            </Button>
+                            <Button
+                                sx={genActionsBtnStyles}
+                                color="emergency"
+                                variant="contained"
+                                onClick={handleAllEmergencyShutdown}
+                                disabled={loadingButtons.genEmergencyShutdown}
+                            >
+                                {loadingButtons.genEmergencyShutdown ? (<HourglassBottomIcon />) : "Emergency Shutdown for all Reactors"}
+                            </Button>
+                            <Button
+                                sx={genActionsBtnStyles}
+                                color="coolant"
+                                variant="contained"
+                                onClick={handleAllToggleCoolant}
+                                disabled={loadingButtons.genCoolant}
+                            >
+                                {loadingButtons.genCoolant ? (<HourglassBottomIcon />) : `Turn ${genCoolantOn ? "off" : "on"} all reactors' coolants`}
+                            </Button>
+                        </>
+                    )
+                }
             </div>
             <div className="reactors-container">
                 {
@@ -298,7 +317,7 @@ const Dashboard = () => {
                     )
                 }
             </div>
-        </div>
+        </ThemeProvider>
     )
 }
 

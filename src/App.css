@@ -81,6 +81,14 @@ body {
     padding-right: 20px;
 }
 
+.average-info-container {
+    display: flex;
+    margin: 20px;
+    justify-content: center;
+    gap: 30px;
+    text-align: center;
+}
+
 .graph {
     background: lightgray;
     display: flex;
